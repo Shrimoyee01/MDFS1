@@ -51,7 +51,7 @@ void loop() {
     // turn blue LED on
     digitalWrite(blueLED, HIGH);
 
-    moveForward(10000); // moving forward fo 10 seconds - subject to change dependant on how long it will take to reach the balls
+    moveForward(10000);  // moving forward fo 10 seconds - subject to change dependant on how long it will take to reach the balls
 
     // delay for the pick up
     delay(20000);
@@ -77,7 +77,7 @@ void loop() {
 
     // move back to the starting position
     moveBackward(10000);
-    
+
     // turn on red LED to show that the process has been completed
     digitalWrite(redLED, HIGH);
   }
@@ -105,7 +105,7 @@ void moveBackward(unsigned long duration) {
   // Set motor speeds for backward motion
   analogWrite(motorFrontLeft, 0);
   analogWrite(motorFrontRight, 0);
-  analogWrite(motorRearLeft, 0);
+  analogWrite(motorBackLeft, 0);
   analogWrite(motorBackRight, 0);
   delay(duration);
   stopMotors();
