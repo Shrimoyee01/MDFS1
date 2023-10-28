@@ -1,6 +1,3 @@
-// C++ code
-
-#include <Arduino.h>
 
 const int redLED = 13;
 const int blueLED = 12;

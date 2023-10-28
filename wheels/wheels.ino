@@ -1,4 +1,4 @@
-// Set the pins for the wheel motors
+// Set the pins
 bool button = 11;
 const int blueLED = 12;
 const int redLED = 13;

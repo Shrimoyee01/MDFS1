@@ -1,5 +1,3 @@
-#include <L298NX2.h>
-
 //driver 1
 // Motor A connections - forward left
 const unsigned int D1_enA = 6;   // speed
