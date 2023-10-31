@@ -15,7 +15,7 @@ void setup() {
 
 void loop() {
 
-  if (sonicDistance(trig_front, echo_front) < 15)
+  if (sonicDistance(trig_front, echo_front) > 15)
   {
     // stop all motors
     // move backwards
