@@ -1,5 +1,7 @@
 // stepper libary
 #include <Stepper.h>
+// servo library
+#include <Servo.h>
 
 // buttons and leds
 const int blueLED = 1;
@@ -34,12 +36,14 @@ const unsigned int D2_in4 = 18;  // spinning direction
 const int stepsPerRevolution = 200;
 
 // initialise the stepper motors
-Stepper captureStepper(stepsPerRevolution, 19, 20, 21, 22);  //L298N signal pins
+Stepper captureStepper(stepsPerRevolution, 19, 20, 21, 22);  // on arduino pins
 Stepper liftStepper(stepsPerRevolution, 23, 24, 25, 26);
 Stepper squashStepper(stepsPerRevolution, 35, 36, 37, 38);
 Stepper tennisStepper(stepsPerRevolution, 39, 40, 41, 42);
 
 // 2 servo motors
+Servo squashServo;
+Servo tennisServo;
 
 // 2 ultra sonic sensors
 const int tennisTrig = 43;
@@ -72,7 +76,14 @@ void setup() {
   pinMode(D2_in4, OUTPUT);
 
   // stepper motor set up
-  myStepper.setSpeed(60);  //  60 rpm
+  captureStepper.setSpeed(60);  //  60 revolutions per minute
+  liftStepper.setSpeed(60);     //  60 rpm
+  squashStepper.setSpeed(60);   //  60 rpm
+  tennisStepper.setSpeed(60);   //  60 rpm
+
+  // pin for the servos
+  squashServo.attach(47);
+  tennisServo.attach(48);
 }
 
 void loop() {
@@ -80,20 +91,39 @@ void loop() {
 
   buttonState = digitalRead(button);
 
-  if (buttonState) {
+  while (buttonState) {
     digitalWrite(blueLED, HIGH);
 
     // move forward slowly to go to the squash balls
     forward(100, 5000);
 
     // delay to wait for the squash balls to be gathered
-    delay(300); // 300 ms delay - subject to change
-    // stepper to pull up the balls and delievered to the delivery system
+    delay(300);  // 300 ms delay - subject to change
 
+    // stepper to pull up the balls and delievered to the delivery system
+    captureStepper.step(100);
 
     backwards(100, 5000);  // go back to the squash ball silo
 
+    // squash ball delivery
+    squashDelievery();
+
+    right(255, 5000);
     
+    if(sonicDistance(frontTrig, frontEcho) < 10 || !(44 <= sonicDistance(tennisTrig, tennisEcho) <= 50))
+    {
+      forward(255, 100;)
+    }
+    else {
+      setMotorSpeed(0);
+    }
+
+    liftStepper.step(1020);
+
+    tennisDelivery();
+
+    backwards(255, 5000);
+
   }
 }
 
@@ -179,4 +209,45 @@ void setMotorSpeed(const int speed) {
   analogWrite(D1_enB, speed);
   analogWrite(D2_enA, speed);
   analogWrite(D2_enB, speed);
+}
+
+// squash ball delivery function - DO NOT TOUCH
+void squashDelievery() {
+  squashStepper.step(-1020);  //Drive motor forward
+  delay(200);
+  squashServo.write(0);
+  // squashServo.attach(7);  // (pin, min, max)
+  delay(500);
+  squashServo.write(180);
+
+  delay(5000);
+
+  squashStepper.step(1020);  //Drive motor backwards
+}
+
+// tennis ball delivery function
+void tennisDelivery() {
+  tennisStepper.step(1020);
+  delay(200);
+  tennisServo.write(0);
+  tennisServo.write(180);
+
+  delay(3000);
+
+  tennisStepper.step(1020);
+}
+
+// ultrasonic sensor
+void sonicDistance(const int trig, const int echo) {
+  digitalWrite(trig, LOW);
+  delay(2);  // Wait for 1000 millisecond(s)
+  digitalWrite(trig, HIGH);
+  delay(100);  // Wait for 1000 millisecond(s)
+  digitalWrite(trig, LOW);
+  duration = pulseIn(echo, HIGH);
+
+  distance = duration * 0.034 / 2;  // in centimeters
+
+  Serial.print("Distance: ");
+  Serial.println(distance); 
 }
