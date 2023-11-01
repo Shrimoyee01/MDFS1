@@ -36,8 +36,8 @@ void sonicDistance(const int trig, const int echo) {
   digitalWrite(trig, LOW);
   duration = pulseIn(echo, HIGH);
 
-  distance = duration * 0.034 / 2;
+  distance = duration * 0.034 / 2;  // in centimeters
 
   Serial.print("Distance: ");
-  Serial.println(distance);
+  Serial.println(distance); 
 }
