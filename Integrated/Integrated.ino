@@ -234,7 +234,7 @@ void tennisDelivery() {
 
   delay(3000);
 
-  tennisStepper.step(1020);
+  tennisStepper.step(-1020);
 }
 
 // ultrasonic sensor
