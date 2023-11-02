@@ -7,7 +7,7 @@
 const int blueLED = 1;
 const int button = 2;
 
-bool buttonSate = false;
+bool buttonState = false;
 
 
 //driver 1
@@ -51,10 +51,11 @@ const int tennisEcho = 44;
 const int frontTrig = 45;
 const int frontEcho = 46;
 
+long duration;
+int distance;
 
 void setup() {
   // buttons and leds
-  pinMode(redLED, OUTPUT);
   pinMode(blueLED, OUTPUT);
   pinMode(button, INPUT);
 
@@ -109,21 +110,19 @@ void loop() {
     squashDelievery();
 
     right(255, 5000);
-    
-    if(sonicDistance(frontTrig, frontEcho) < 10 || !(44 <= sonicDistance(tennisTrig, tennisEcho) <= 50))
-    {
-      forward(255, 100;)
+
+    while (sonicDistance(frontTrig, frontEcho) < 10 || !(44 <= sonicDistance(tennisTrig, tennisEcho) <= 50)) {
+      forward(255, 100);
+      continue;
     }
-    else {
-      setMotorSpeed(0);
-    }
+
+    setMotorSpeed(0);
 
     liftStepper.step(1020);
 
     tennisDelivery();
 
     backwards(255, 5000);
-
   }
 }
 
@@ -238,7 +237,7 @@ void tennisDelivery() {
 }
 
 // ultrasonic sensor
-void sonicDistance(const int trig, const int echo) {
+int sonicDistance(const int trig, const int echo) {
   digitalWrite(trig, LOW);
   delay(2);  // Wait for 1000 millisecond(s)
   digitalWrite(trig, HIGH);
@@ -249,5 +248,5 @@ void sonicDistance(const int trig, const int echo) {
   distance = duration * 0.034 / 2;  // in centimeters
 
   Serial.print("Distance: ");
-  Serial.println(distance); 
+  Serial.println(distance);
 }
